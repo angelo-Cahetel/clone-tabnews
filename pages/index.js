@@ -1,5 +1,5 @@
 function Home() {
-  return <h1>Corrigindo o commit</h1>;
+  return <h1>Welcome to TabNews Clone!</h1>;
 }
 
 export default Home;
