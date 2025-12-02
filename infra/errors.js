@@ -37,6 +37,25 @@ export class ServiceError extends Error {
     };
   }
 }
+export class ValidationError extends Error {
+  constructor({ message, cause, action }) {
+    super(message || "Serviço indisponível no momento.", {
+      cause,
+    });
+    this.name = "ValidationError";
+    this.action = action || "Verifique se o serviço está disponível.";
+    this.statusCode = 400;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
 
 export class MethodNotAllowedError extends Error {
   constructor() {
