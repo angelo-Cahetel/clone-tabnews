@@ -4,6 +4,5 @@
     "plugin:jest/recommended",
     "next/core-web-vitals",
     "prettier"
-  ],
-  "no-undef": "error"
+  ]
 }
