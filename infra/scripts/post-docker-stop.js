@@ -1,27 +1,18 @@
-const { spawn } = require("child_process");
-const { execSync } = require("child_process");
-const { error } = require("console");
+const { exec } = require("node:child_process");
 
-const nextDev = spawn("next", ["dev"], {
-  stdio: "inherit",
-  shell: true,
-});
+function checkPostgres() {
+  exec("docker exec postgres-dev pg_isready --host localhost", handleReturn);
 
-function cleanup() {
-  console.log("\n🛑 Parando servidor de desenvolvimento");
-  try {
-    execSync("npm run services:stop", { stdio: "inherit" });
-  } catch (err) {
-    console.error("Erro ao parar servidor de desenvolvimento:", error.message);
+  function handleReturn(error, stdout) {
+    if (stdout.search("accepting connections") === -1) {
+      process.stdout.write(".");
+      checkPostgres();
+      return;
+    }
+
+    console.log("\n🟢 Postgres está pronto e aceitando conexões!\n");
   }
-  process.exit();
 }
 
-process.on("SIGINT", cleanup);
-process.on("SIGTERM", cleanup);
-
-nextDev.on("exit", (code) => {
-  if (code !== 0) {
-    cleanup();
-  }
-});
+process.stdout.write("\n\n🔴 Aguardando Postgres aceitar conexões");
+checkPostgres();
